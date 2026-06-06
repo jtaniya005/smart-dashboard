@@ -1,37 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
+const mongoose = require('mongoose');
+const cors = require('cors'); // CORS ko require karein
 const leadRoutes = require('./routes/leadRoutes');
-const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
-
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-// Health check
-app.get('/', (req, res) => {
-  res.json({ success: true, message: 'Lead CRM API is running 🚀' });
-});
+// Sabhi domains (Vercel samet) se requests allow karne ke liye
+app.use(cors()); 
 
-// API Routes
-app.use('/api/leads', leadRoutes);
+// Routes
+app.use('/api', leadRoutes);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
-});
-
-// Error handler
-app.use(errorHandler);
-
+// Database Connection
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('MongoDB Atlas Cloud Connected Successfully!');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((err) => console.log('Database connection error: ', err));
