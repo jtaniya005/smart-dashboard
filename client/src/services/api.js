@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  
-  baseURL: process.env.REACT_APP_API_URL || 'https://smart-dashboard-1-qqoi.onrender.com/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://smart-dashboard-bvl8.onrender.com/api',
 });
 
 // ── Leads API ──────────────────────────────────────────────
