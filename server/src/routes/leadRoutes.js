@@ -7,7 +7,7 @@ const {
   updateLead,
   deleteLead,
   getStats,
-} = require('../controllers/leadController');
+} = require('../controllers/leadcontroller');
 const { leadValidationRules, handleValidation } = require('../middleware/validate');
 
 // Stats route (must be before /:id)
