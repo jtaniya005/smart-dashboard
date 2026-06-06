@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const cors = require('cors'); // CORS ko require karein
 const leadRoutes = require('./routes/leadRoutes');
 
@@ -13,10 +14,23 @@ app.use(express.json());
 app.use(cors()); 
 
 // Routes
-app.use('/api', leadRoutes);
+// Mount lead routes at /api/leads so frontend calls to /api/leads/* match
+app.use('/api/leads', leadRoutes);
 
 // Health check
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '..', '..', 'client', 'build');
+  app.use(express.static(clientBuildPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+} else {
+  // simple root for non-production to show server is up
+  app.get('/', (req, res) => res.send('Lead CRM API running'));
+}
 
 // Database Connection
 const PORT = process.env.PORT || 5000;
