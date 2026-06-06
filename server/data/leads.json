@@ -1,0 +1,7 @@
+[
+  { "name": "Priya Sharma", "email": "priya.sharma@example.com", "phone": "9876543210", "company": "Acme Corp", "status": "New", "notes": "Interested in premium plan" },
+  { "name": "Arjun Patel", "email": "arjun.patel@example.com", "phone": "9123456780", "company": "Beta LLC", "status": "Contacted", "notes": "Requested demo" },
+  { "name": "Sara Khan", "email": "sara.khan@example.com", "phone": "9988776655", "company": "Gamma Inc", "status": "Qualified", "notes": "Follow-up next week" },
+  { "name": "Liam Smith", "email": "liam.smith@example.com", "phone": "9012345678", "company": "Delta Co", "status": "Lost", "notes": "Budget constraints" },
+  { "name": "Maya Verma", "email": "maya.verma@example.com", "phone": "9567890123", "company": "Epsilon Ltd", "status": "Converted", "notes": "Closed last week" }
+]

@@ -1,0 +1,75 @@
+import { useState, useEffect, useCallback } from 'react';
+import { getLeads, getStats, deleteLead, updateLead, createLead } from '../services/api';
+import toast from 'react-hot-toast';
+
+export function useLeads(params) {
+  const [leads, setLeads] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getLeads(params);
+      setLeads(res.data.data);
+      setPagination(res.data.pagination);
+    } catch (err) {
+      setError('Failed to fetch leads');
+    } finally {
+      setLoading(false);
+    }
+  }, [JSON.stringify(params)]);
+
+  useEffect(() => { fetchLeads(); }, [fetchLeads]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this lead?')) return;
+    try {
+      await deleteLead(id);
+      toast.success('Lead deleted');
+      fetchLeads();
+    } catch {
+      toast.error('Failed to delete lead');
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      await updateLead(id, { status });
+      toast.success('Status updated');
+      fetchLeads();
+    } catch {
+      toast.error('Failed to update status');
+    }
+  };
+
+  const handleCreate = async (data) => {
+    const res = await createLead(data);
+    fetchLeads();
+    return res.data.data;
+  };
+
+  const handleUpdate = async (id, data) => {
+    const res = await updateLead(id, data);
+    fetchLeads();
+    return res.data.data;
+  };
+
+  return { leads, pagination, loading, error, handleDelete, handleStatusChange, handleCreate, handleUpdate, refetch: fetchLeads };
+}
+
+export function useStats() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getStats()
+      .then((res) => setStats(res.data.data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { stats, loading };
+}
